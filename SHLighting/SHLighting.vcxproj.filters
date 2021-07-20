@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="tools">
+      <UniqueIdentifier>{440be619-d345-4a27-860a-6708cbe32d2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{8acd89da-48d1-4cc6-927f-fa8746e3d12e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="samplers">
+      <UniqueIdentifier>{be188c7c-f147-4aa5-88ef-31ae102996c1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SHLighting.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="tools\glad.c">
+      <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="tools\Maths.cpp">
+      <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="tools\Utility.cpp">
+      <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="sampler\harmonics.cpp">
+      <Filter>samplers</Filter>
+    </ClCompile>
+    <ClCompile Include="sampler\texture.cpp">
+      <Filter>samplers</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="tools\Camera.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="tools\Maths.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="tools\Shader.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="tools\stb_image.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="tools\Utility.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="SHLighting.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="sampler\harmonics.h">
+      <Filter>samplers</Filter>
+    </ClInclude>
+    <ClInclude Include="sampler\texture.h">
+      <Filter>samplers</Filter>
+    </ClInclude>
+    <ClInclude Include="tools\stb_image_write.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\rabbit_frag.fs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\rabbit_vert.vs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\cal_light_vert.vs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\cal_light_frag.fs">
+      <Filter>shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>
