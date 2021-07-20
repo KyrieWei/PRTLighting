@@ -74,12 +74,15 @@
     <ClInclude Include="tools\stb_image_write.h">
       <Filter>tools</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\rabbit_frag.fs">
+    <None Include="shaders\ball_frag.fs">
       <Filter>shaders</Filter>
     </None>
-    <None Include="shaders\rabbit_vert.vs">
+    <None Include="shaders\ball_vert.vs">
       <Filter>shaders</Filter>
     </None>
     <None Include="shaders\cal_light_vert.vs">
@@ -88,5 +91,19 @@
     <None Include="shaders\cal_light_frag.fs">
       <Filter>shaders</Filter>
     </None>
+    <None Include="shaders\skybox_vert.vs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\skybox_frag.fs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\SHCoeff_comp.cs">
+      <Filter>shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SHLighting.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

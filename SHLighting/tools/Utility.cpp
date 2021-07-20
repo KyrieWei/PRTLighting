@@ -87,9 +87,9 @@ void generate_ball_mesh(const char* str, int lat, int lon, double radius)
     double x, y, z;
 
     //-------------------------------vertex-normal-texcoord------------------------------------
-    //Z轴正向极点
-    out << "v " << 0 << " " << 0 << " " << radius << std::endl;
-    out << "n " << 0 << " " << 0 << " " << 1 << std::endl;
+    //Y轴正向极点
+    out << "v " << 0 << " " << radius << " " << 0 << std::endl;
+    out << "n " << 0 << " " << 1 << " " << 0 << std::endl;
     out << "t " << 0.5 << " " << 1.0 << std::endl;
 
     //球坐标 
@@ -106,7 +106,7 @@ void generate_ball_mesh(const char* str, int lat, int lon, double radius)
     for (int i = 1; i <= lat; i++)
     {
         phi = delta_phi * i;
-        z = radius * cos(phi);
+        y = radius * cos(phi);
         r_sin_phi = radius * sin(phi);
 
         //lon 条经线
@@ -114,7 +114,7 @@ void generate_ball_mesh(const char* str, int lat, int lon, double radius)
         {
             double theta = delta_theta * j;
             x = cos(theta) * r_sin_phi;
-            y = sin(theta) * r_sin_phi;
+            z = sin(theta) * r_sin_phi;
 
             double v = (double)i / (lat + 1);
             double u = (double)j / lon;
@@ -125,9 +125,9 @@ void generate_ball_mesh(const char* str, int lat, int lon, double radius)
         }
     }
      
-    //Z轴负向极点
-    out << "v " << 0 << " " << 0 << " " << -radius << std::endl;
-    out << "n " << 0 << " " << 0 << " " << -1 << std::endl;
+    //Y轴负向极点
+    out << "v " << 0 << " " << -radius << " " << 0 << std::endl;
+    out << "n " << 0 << " " << -1 << " " << 0 << std::endl;
     out << "t " << 0.5 << " " << 0.0 << std::endl;
 
     out << std::endl;

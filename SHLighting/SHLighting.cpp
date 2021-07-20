@@ -1,3 +1,11 @@
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_STATIC
+#include "tools/stb_image.h"
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_STATIC
+#include "tools/stb_image_write.h"
+
 #include "SHLighting.h"
 
 SHLighting::SHLighting()
@@ -83,8 +91,8 @@ void SHLighting::save_sh_texture()
 void SHLighting::run()
 {
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 #ifdef __APPLE__
@@ -131,13 +139,14 @@ void SHLighting::run()
 
     glEnable(GL_DEPTH_TEST);
 
+#pragma region ball_mesh
 
     int lat = 40, lon = 81;
     int ball_vertex_num = lat * lon + 2;
     int ball_tri_num = lon * lat * 2;
     double radius = 2.0;
 
-    generate_ball_mesh("assets/ball_mesh.txt", lat, lon, radius);
+    //generate_ball_mesh("assets/ball_mesh.txt", lat, lon, radius);
 
     float* ball_mesh_vertex = new float[ball_vertex_num * 8];
     unsigned int* ball_vertex_index = new unsigned int[ball_tri_num * 3];
@@ -170,6 +179,10 @@ void SHLighting::run()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+#pragma endregion
+
+#pragma region earthmap_texture
+
     unsigned int earthmap_texture;
     glGenTextures(1, &earthmap_texture);
 
@@ -192,11 +205,166 @@ void SHLighting::run()
         std::cout << "Failed to load texutre" << std::endl;
     }
 
-    Shader rabbitShader = Shader("shaders/rabbit_vert.vs", "shaders/rabbit_frag.fs");
+#pragma endregion
 
-    Shader calLightShader = Shader("shaders/cal_light_vert.vs", "shaders/cal_light_frag.fs");
+#pragma region skybox
+
+    float skyboxVertices[] = {
+        // positions          
+        -1.0f,  1.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+        -1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f,  1.0f
+    };
+
+
+    unsigned int skyboxVAO, skyboxVBO;
+    glGenVertexArrays(1, &skyboxVAO);
+    glGenBuffers(1, &skyboxVBO);
+
+    glBindVertexArray(skyboxVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+    std::vector<std::string> faces = { "assets/skybox/right.jpg",
+                                       "assets/skybox/left.jpg",
+                                       "assets/skybox/top.jpg", 
+                                       "assets/skybox/bottom.jpg", 
+                                       "assets/skybox/front.jpg", 
+                                       "assets/skybox/back.jpg" };
+
+    unsigned int skyboxID;
+    glGenTextures(1, &skyboxID);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxID);
+    
+    int skybox_width, skybox_height, skybox_channel;
+    for (int i = 0; i < faces.size(); i++)
+    {
+        unsigned char* skybox_data = stbi_load(faces[i].c_str(), &skybox_width, &skybox_height, &skybox_channel, 0);
+        if (skybox_data)
+        {
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, skybox_width, skybox_height, 0, GL_RGB, GL_UNSIGNED_BYTE, skybox_data);
+            stbi_image_free(skybox_data);
+        }
+        else
+        {
+            std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
+            stbi_image_free(skybox_data);
+        }
+    }
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+#pragma endregion
+
+#pragma region SH_Coeff
+
+
+    int tex_w = 512, tex_h = 512;
+    unsigned int tex_output;
+
+    glGenTextures(1, &tex_output);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex_output);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, tex_w, tex_h, 0, GL_RGBA, GL_FLOAT, NULL);
+
+    glBindImageTexture(0, tex_output, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+
+    Shader SHCoeffShader("shaders/SHCoeff_comp.cs");
+
+    SHCoeffShader.use();
+    
+    int work_grp_cnt[3];
+
+    glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &work_grp_cnt[0]);
+    glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &work_grp_cnt[1]);
+    glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &work_grp_cnt[2]);
+    
+    glDispatchCompute((GLuint)tex_w, (GLuint)tex_h, 1);
+
+    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+
+    std::unique_ptr<float[]> pixels(new float[tex_w * tex_h * 4]);
+
+    glActiveTexture(GL_TEXTURE0);
+    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT, pixels.get());
+
+    unsigned char* m_image = new unsigned char[tex_w * tex_h * 4];
+
+    for (int i = 1; i <= tex_w * tex_h * 4; i++)
+    {
+        m_image[i - 1] = static_cast<unsigned char>(pixels[i - 1] * 255);
+    }
+
+
+    stbi_write_jpg("assets/compute_test.jpg", tex_w, tex_h, 4, m_image, 50);
+
+#pragma endregion
+
+
+
+    Shader ballShader("shaders/ball_vert.vs", "shaders/ball_frag.fs");
+
+    Shader calLightShader("shaders/cal_light_vert.vs", "shaders/cal_light_frag.fs");
+
+    Shader skyboxShader("shaders/skybox_vert.vs", "shaders/skybox_frag.fs");
+
+    ballShader.use();
+    ballShader.setInt("skybox", 0);
+
+    skyboxShader.use();
+    skyboxShader.setInt("skybox", 0);
 
     camera.setInitialStatus(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f);
+
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -209,27 +377,51 @@ void SHLighting::run()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        calLightShader.use();
+        
+        ballShader.use();
         
         glm::mat4 model = glm::mat4(1.0);
-        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::translate(model, glm::vec3(-2.0f, 0.0f, 0.0f));
-        calLightShader.setMat4("model", model);
+        ballShader.setMat4("model", model);
 
         glm::mat4 view = camera.GetViewMatrix();
-        calLightShader.setMat4("view", view);
+        ballShader.setMat4("view", view);
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
-        calLightShader.setMat4("projection", projection);
+        ballShader.setMat4("projection", projection);
 
-        glBindTexture(GL_TEXTURE_2D, earthmap_texture);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, skyboxID);
 
         glBindVertexArray(ball_VAO);
         glDrawElements(GL_TRIANGLES, ball_tri_num * 3, GL_UNSIGNED_INT, 0);
 
+        calLightShader.use();
+
         model = glm::translate(model, glm::vec3(5.0f, 0.0f, 0.0f));
         calLightShader.setMat4("model", model);
+
+        calLightShader.setMat4("view", view);
+
+        calLightShader.setMat4("projection", projection);
+
         glDrawElements(GL_TRIANGLES, ball_tri_num * 3, GL_UNSIGNED_INT, 0);
+
+        //skybox
+        glDepthFunc(GL_LEQUAL);
+        skyboxShader.use();
+        view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
+        skyboxShader.setMat4("view", view);
+        skyboxShader.setMat4("projection", projection);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxID);
+
+        glBindVertexArray(skyboxVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        
+        glDepthFunc(GL_LESS);
+
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -238,6 +430,9 @@ void SHLighting::run()
     glDeleteVertexArrays(1, &ball_VAO);
     glDeleteBuffers(1, &ball_VBO);
     glDeleteBuffers(1, &ball_EBO);
+
+    glDeleteVertexArrays(1, &skyboxVAO);
+    glDeleteBuffers(1, &skyboxVBO);
 
     glfwTerminate();
 

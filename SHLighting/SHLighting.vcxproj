@@ -149,6 +149,7 @@
     <ClCompile Include="tools\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="sampler\harmonics.h" />
     <ClInclude Include="sampler\texture.h" />
     <ClInclude Include="SHLighting.h" />
@@ -162,8 +163,14 @@
   <ItemGroup>
     <None Include="shaders\cal_light_frag.fs" />
     <None Include="shaders\cal_light_vert.vs" />
-    <None Include="shaders\rabbit_frag.fs" />
-    <None Include="shaders\rabbit_vert.vs" />
+    <None Include="shaders\ball_frag.fs" />
+    <None Include="shaders\ball_vert.vs" />
+    <None Include="shaders\SHCoeff_comp.cs" />
+    <None Include="shaders\skybox_frag.fs" />
+    <None Include="shaders\skybox_vert.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SHLighting.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,11 +1,10 @@
 #version 450 core
-#define PI 3.14159265358979323846
 
-in vec3 normal;
+layout (local_size_x = 16, local_size_y = 16) in;
 
-out vec4 fragColor;
+layout (rgba32f, binding = 0) uniform image2D toTex;
 
-float sh_basis[16];
+uniform vec2 SampleSize;
 
 void generate_basis(float x, float y, float z)
 {
@@ -27,17 +26,18 @@ void generate_basis(float x, float y, float z)
 	sh_basis[15] = -0.25 * sqrt(35 / (2 * PI)) * (x * x - 3 * y * y) * x;
 }
 
+vec3 get_color()
+{
+    return vec3(0.3, 0.5, 0.8);
+}
+
+
 void main()
 {
-    float theta = acos(normal.z);
-    float phi = acos(normal.x / sin(theta));
-	
-	generate_basis(normal.x, normal.y, normal.z);
+    ivec2 texelCoords = ivec2(gl_GlobalInvocationID.xy);
 
-    float light = 0.416545 * sh_basis[0] 
-				  - 0.210572 * sh_basis[1] + 0.317436 * sh_basis[2] + 0.28181 * sh_basis[3] 
-				  - 0.315014 * sh_basis[4] + 0.17174 * sh_basis[6] + 0.0931091 * sh_basis[8]
-				  - 0.249554 * sh_basis[9] + 0.12341 * sh_basis[11] + 0.352429 * sh_basis[12] - 0.165133 * sh_basis[13] - 0.0922961 * sh_basis[15];
+    vec3 color = get_color();
+    vec4 pixel = vec4(color, 1.0);
 
-    fragColor = vec4(light, light, light, 1.0);
+    imageStore(toTex, texelCoords, pixel);
 }

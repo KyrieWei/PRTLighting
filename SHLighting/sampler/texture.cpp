@@ -1,7 +1,9 @@
 #include "texture.h"
 #define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_STATIC
 #include "../tools/stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_STATIC
 #include "../tools/stb_image_write.h"
 
 #include <iostream>
@@ -28,7 +30,6 @@ texture::texture(const char* str)
 	{
 		std::cout << "failed to load texture " << str << std::endl;
 	}
-
 }
 
 texture::~texture()
