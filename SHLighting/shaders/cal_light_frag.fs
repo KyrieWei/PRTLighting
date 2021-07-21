@@ -7,6 +7,11 @@ out vec4 fragColor;
 
 float sh_basis[16];
 
+layout (std140, binding = 0) uniform sh_coeff_buffer
+{
+	vec4 sh_coeff[];
+};
+
 void generate_basis(float x, float y, float z)
 {
 	sh_basis[0] = 0.5 * sqrt(1.0 / PI);
@@ -34,10 +39,9 @@ void main()
 	
 	generate_basis(normal.x, normal.y, normal.z);
 
-    float light = 0.416545 * sh_basis[0] 
-				  - 0.210572 * sh_basis[1] + 0.317436 * sh_basis[2] + 0.28181 * sh_basis[3] 
-				  - 0.315014 * sh_basis[4] + 0.17174 * sh_basis[6] + 0.0931091 * sh_basis[8]
-				  - 0.249554 * sh_basis[9] + 0.12341 * sh_basis[11] + 0.352429 * sh_basis[12] - 0.165133 * sh_basis[13] - 0.0922961 * sh_basis[15];
+    vec4 light = sh_coeff[0] * sh_basis[0] +
+				 sh_coeff[1] * sh_basis[1] + sh_coeff[2] * sh_basis[2] + sh_coeff[3] * sh_basis[3] +
+				 sh_coeff[4] * sh_basis[4] + sh_coeff[5] * sh_basis[5] + sh_coeff[6] * sh_basis[6] + sh_coeff[7] * sh_basis[7] + sh_coeff[8] * sh_basis[8];
 
-    fragColor = vec4(light, light, light, 1.0);
+    fragColor = vec4(light.xyz, 1.0);
 }

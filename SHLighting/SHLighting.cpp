@@ -139,6 +139,10 @@ void SHLighting::run()
 
     glEnable(GL_DEPTH_TEST);
 
+    Shader ballShader("shaders/ball_vert.vs", "shaders/ball_frag.fs");
+    Shader calLightShader("shaders/cal_light_vert.vs", "shaders/cal_light_frag.fs");
+    Shader skyboxShader("shaders/skybox_vert.vs", "shaders/skybox_frag.fs");
+
 #pragma region ball_mesh
 
     int lat = 40, lon = 81;
@@ -302,62 +306,98 @@ void SHLighting::run()
 
 #pragma region SH_Coeff
 
+    int sh_degrees = 3;
+    int coeff_num = sh_degrees * sh_degrees;
 
-    int tex_w = 512, tex_h = 512;
-    unsigned int tex_output;
+    int sample_size_x = 512, sample_size_y = 512;
+    int thread_x = 8, thread_y = 8;
+    int group_x = sample_size_x / thread_x;
+    int group_y = sample_size_y / thread_y;
 
-    glGenTextures(1, &tex_output);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, tex_output);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, tex_w, tex_h, 0, GL_RGBA, GL_FLOAT, NULL);
-
-    glBindImageTexture(0, tex_output, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
 
     Shader SHCoeffShader("shaders/SHCoeff_comp.cs");
 
     SHCoeffShader.use();
+    SHCoeffShader.setVec2("SampleSize", glm::vec2(sample_size_x, sample_size_y));
+
+    //暂存每个线程组的sh_coeff
+    glm::vec4* sh_coeff_tmp_buffer = new glm::vec4[group_x * group_y * coeff_num];
     
-    int work_grp_cnt[3];
+    //最终的sh_coeff
+    glm::vec4* sh_coeff = new glm::vec4[coeff_num];
 
-    glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &work_grp_cnt[0]);
-    glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &work_grp_cnt[1]);
-    glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &work_grp_cnt[2]);
-    
-    glDispatchCompute((GLuint)tex_w, (GLuint)tex_h, 1);
+    for (int i = 0; i < coeff_num; i++)
+        sh_coeff[i] = glm::vec4(0);
 
-    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
-
-    std::unique_ptr<float[]> pixels(new float[tex_w * tex_h * 4]);
+    //传递天空盒贴图
+    SHCoeffShader.setInt("skybox", 0);
 
     glActiveTexture(GL_TEXTURE0);
-    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT, pixels.get());
+    glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxID);
 
-    unsigned char* m_image = new unsigned char[tex_w * tex_h * 4];
+    //计算sh_coeff
+    unsigned int shcoeff_ssbo;
+    glGenBuffers(1, &shcoeff_ssbo);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shcoeff_ssbo);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4) * group_x * group_y * coeff_num, NULL , GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, shcoeff_ssbo);
 
-    for (int i = 1; i <= tex_w * tex_h * 4; i++)
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+    unsigned int shcoeff_blockIndex = glGetProgramResourceIndex(SHCoeffShader.ID, GL_SHADER_STORAGE_BLOCK, "sh_coeff_buffer");
+
+    if (shcoeff_blockIndex != GL_INVALID_INDEX)
     {
-        m_image[i - 1] = static_cast<unsigned char>(pixels[i - 1] * 255);
+        glShaderStorageBlockBinding(SHCoeffShader.ID, shcoeff_blockIndex, 0);
     }
+    else
+    {
+        std::cout << "binding sh_coeff_buffer not found" << std::endl;
+    }
+    
+    glDispatchCompute((GLuint)group_x, (GLuint)group_y, 1);
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+    
+    //将compute shader中的sh_coeff_buffer数据取出来
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shcoeff_ssbo);
+    void* ptr = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
+    memcpy(sh_coeff_tmp_buffer, ptr, sizeof(glm::vec4) * group_x * group_y * coeff_num);
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
+    //将每个线程组的sh_coeff相加得到最终的sh_coeff
+    for (int i = 0; i < group_x * group_y; i++)
+        for(int j = 0; j < coeff_num; j++)
+            sh_coeff[j] += sh_coeff_tmp_buffer[i * coeff_num + j];
 
-    stbi_write_jpg("assets/compute_test.jpg", tex_w, tex_h, 4, m_image, 50);
+    //print sh_coeff
+    for (int i = 0; i < coeff_num; i++)
+        std::cout << sh_coeff[i].x << " " << sh_coeff[i].y << " " << sh_coeff[i].z << " " << sh_coeff[i].w << std::endl;
+
+    delete[] sh_coeff_tmp_buffer;
+
+    //send sh_coeff to fragment shader
+    unsigned int sh_coeffUBI = glGetUniformBlockIndex(calLightShader.ID, "sh_coeff_buffer");
+    glUniformBlockBinding(calLightShader.ID, sh_coeffUBI, 0);
+
+    unsigned int sh_coeff_uboBlock;
+    glGenBuffers(1, &sh_coeff_uboBlock);
+    glBindBuffer(GL_UNIFORM_BUFFER, sh_coeff_uboBlock);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::vec4) * coeff_num, NULL, GL_STATIC_READ);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, sh_coeff_uboBlock, 0, sizeof(glm::vec4) * coeff_num);
+    glBindBuffer(GL_UNIFORM_BUFFER, sh_coeff_uboBlock);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec4) * coeff_num, sh_coeff);
+
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 #pragma endregion
 
-
-
-    Shader ballShader("shaders/ball_vert.vs", "shaders/ball_frag.fs");
-
-    Shader calLightShader("shaders/cal_light_vert.vs", "shaders/cal_light_frag.fs");
-
-    Shader skyboxShader("shaders/skybox_vert.vs", "shaders/skybox_frag.fs");
-
     ballShader.use();
     ballShader.setInt("skybox", 0);
+
+    calLightShader.use();
+
 
     skyboxShader.use();
     skyboxShader.setInt("skybox", 0);
@@ -385,7 +425,7 @@ void SHLighting::run()
         ballShader.setMat4("model", model);
 
         glm::mat4 view = camera.GetViewMatrix();
-        ballShader.setMat4("view", view);
+        ballShader.setMat4("view", view); 
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
         ballShader.setMat4("projection", projection);
@@ -433,6 +473,8 @@ void SHLighting::run()
 
     glDeleteVertexArrays(1, &skyboxVAO);
     glDeleteBuffers(1, &skyboxVBO);
+
+    delete[] sh_coeff;
 
     glfwTerminate();
 
