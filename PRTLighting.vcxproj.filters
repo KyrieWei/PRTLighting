@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="tools">
+      <UniqueIdentifier>{e763461b-b52b-4489-b675-88bf77719d3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{cdd14052-93bc-4cff-afb0-d2545b6a265a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="samplers">
+      <UniqueIdentifier>{e6d28b7b-5e4e-4882-986f-6865d29b13f3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="PRTLighting\main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PRTLighting\PRTLighting.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PRTLighting\SHLighting.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PRTLighting\tools\glad.c">
+      <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="PRTLighting\tools\Maths.cpp">
+      <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="PRTLighting\tools\Utility.cpp">
+      <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="PRTLighting\sampler\harmonics.cpp">
+      <Filter>samplers</Filter>
+    </ClCompile>
+    <ClCompile Include="PRTLighting\sampler\texture.cpp">
+      <Filter>samplers</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="PRTLighting\PRTLighting.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\SHLighting.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\tools\Camera.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\tools\Maths.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\tools\Shader.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\tools\stb_image.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\tools\stb_image_write.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\tools\Utility.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\sampler\harmonics.h">
+      <Filter>samplers</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\sampler\texture.h">
+      <Filter>samplers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PRTLighting\shaders\ball_frag.fs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="PRTLighting\shaders\ball_vert.vs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="PRTLighting\shaders\buddha_frag.fs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="PRTLighting\shaders\buddha_vert.vs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="PRTLighting\shaders\cal_light_frag.fs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="PRTLighting\shaders\cal_light_vert.vs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="PRTLighting\shaders\SHCoeff_comp.cs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="PRTLighting\shaders\skybox_frag.fs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="PRTLighting\shaders\skybox_vert.vs">
+      <Filter>shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>
