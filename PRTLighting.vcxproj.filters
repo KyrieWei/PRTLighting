@@ -48,6 +48,27 @@
     <ClCompile Include="PRTLighting\sampler\texture.cpp">
       <Filter>samplers</Filter>
     </ClCompile>
+    <ClCompile Include="PRTLighting\tools\Mesh.cpp">
+      <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="PRTLighting\tools\Model.cpp">
+      <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="PRTLighting\tools\Transform.cpp">
+      <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="PRTLighting\Scene.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PRTLighting\SimpleScene.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PRTLighting\Renderer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PRTLighting\tools\Light.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PRTLighting\PRTLighting.h">
@@ -83,6 +104,36 @@
     <ClInclude Include="PRTLighting\sampler\texture.h">
       <Filter>samplers</Filter>
     </ClInclude>
+    <ClInclude Include="PRTLighting\tools\Mesh.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\tools\Model.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\tools\Singleton.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\tools\MaterialSetting.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\tools\Transform.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\Scene.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\tools\standardModel.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\SimpleScene.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\Renderer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\tools\Light.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="PRTLighting\shaders\ball_frag.fs">
@@ -110,6 +161,24 @@
       <Filter>shaders</Filter>
     </None>
     <None Include="PRTLighting\shaders\skybox_vert.vs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="PRTLighting\shaders\render_vert.vs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="PRTLighting\shaders\render_frag.fs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="PRTLighting\shaders\depth_vert.vs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="PRTLighting\shaders\depth_frag.fs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="PRTLighting\shaders\debug_depth_vert.vs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="PRTLighting\shaders\debug_depth_frag.fs">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>

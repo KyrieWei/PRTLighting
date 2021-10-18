@@ -3,11 +3,12 @@
 
 int main()
 {
-    PRTLighting app;
+    PRTLighting::ptr app = PRTLighting::getSingleton();
 
-    app.setWindowSize(1280, 720);
-    app.setWindowTitle("PRTLighting");
-    app.run();
+    app->setWindowSize(1280, 720);
+    app->setWindowTitle("PRTLighting");
+    app->init();
+    app->run();
 
     return 0;
 }

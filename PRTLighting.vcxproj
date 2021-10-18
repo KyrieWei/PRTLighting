@@ -142,24 +142,41 @@
   <ItemGroup>
     <ClCompile Include="PRTLighting\main.cpp" />
     <ClCompile Include="PRTLighting\PRTLighting.cpp" />
+    <ClCompile Include="PRTLighting\Renderer.cpp" />
     <ClCompile Include="PRTLighting\sampler\harmonics.cpp" />
     <ClCompile Include="PRTLighting\sampler\texture.cpp" />
+    <ClCompile Include="PRTLighting\Scene.cpp" />
     <ClCompile Include="PRTLighting\SHLighting.cpp" />
+    <ClCompile Include="PRTLighting\SimpleScene.cpp" />
     <ClCompile Include="PRTLighting\tools\glad.c" />
+    <ClCompile Include="PRTLighting\tools\Light.cpp" />
     <ClCompile Include="PRTLighting\tools\Maths.cpp" />
+    <ClCompile Include="PRTLighting\tools\Mesh.cpp" />
+    <ClCompile Include="PRTLighting\tools\Model.cpp" />
+    <ClCompile Include="PRTLighting\tools\Transform.cpp" />
     <ClCompile Include="PRTLighting\tools\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PRTLighting\PRTLighting.h" />
+    <ClInclude Include="PRTLighting\Renderer.h" />
     <ClInclude Include="PRTLighting\resource.h" />
     <ClInclude Include="PRTLighting\sampler\harmonics.h" />
     <ClInclude Include="PRTLighting\sampler\texture.h" />
+    <ClInclude Include="PRTLighting\Scene.h" />
     <ClInclude Include="PRTLighting\SHLighting.h" />
+    <ClInclude Include="PRTLighting\SimpleScene.h" />
     <ClInclude Include="PRTLighting\tools\Camera.h" />
+    <ClInclude Include="PRTLighting\tools\Light.h" />
+    <ClInclude Include="PRTLighting\tools\MaterialSetting.h" />
     <ClInclude Include="PRTLighting\tools\Maths.h" />
+    <ClInclude Include="PRTLighting\tools\Mesh.h" />
+    <ClInclude Include="PRTLighting\tools\Model.h" />
     <ClInclude Include="PRTLighting\tools\Shader.h" />
+    <ClInclude Include="PRTLighting\tools\Singleton.h" />
+    <ClInclude Include="PRTLighting\tools\standardModel.h" />
     <ClInclude Include="PRTLighting\tools\stb_image.h" />
     <ClInclude Include="PRTLighting\tools\stb_image_write.h" />
+    <ClInclude Include="PRTLighting\tools\Transform.h" />
     <ClInclude Include="PRTLighting\tools\Utility.h" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +186,12 @@
     <None Include="PRTLighting\shaders\buddha_vert.vs" />
     <None Include="PRTLighting\shaders\cal_light_frag.fs" />
     <None Include="PRTLighting\shaders\cal_light_vert.vs" />
+    <None Include="PRTLighting\shaders\debug_depth_frag.fs" />
+    <None Include="PRTLighting\shaders\debug_depth_vert.vs" />
+    <None Include="PRTLighting\shaders\depth_frag.fs" />
+    <None Include="PRTLighting\shaders\depth_vert.vs" />
+    <None Include="PRTLighting\shaders\render_frag.fs" />
+    <None Include="PRTLighting\shaders\render_vert.vs" />
     <None Include="PRTLighting\shaders\SHCoeff_comp.cs" />
     <None Include="PRTLighting\shaders\skybox_frag.fs" />
     <None Include="PRTLighting\shaders\skybox_vert.vs" />

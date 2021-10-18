@@ -4,6 +4,7 @@
 
 #include "../tools/Maths.h"
 #include "../tools/Utility.h"
+#include "../tools/Shader.h"
 
 class texture
 {
@@ -21,5 +22,16 @@ public:
 
 	//static std::vector<int> sample_texture(const texture& text, double theta, double phi);
 	//static std::vector<double> cal_test_light(const texture& text, double theta, double phi);
+};
+
+class DepthTexture
+{
+public:
+	unsigned int textureID, depthMapFBO;
+	unsigned int SHADOW_WIDTH, SHADOW_HEIGHT;
+
+public:
+	void init(unsigned int width, unsigned int height);
+	void bind(unsigned int unit);
 };
 
