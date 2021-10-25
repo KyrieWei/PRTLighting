@@ -69,6 +69,9 @@
     <ClCompile Include="PRTLighting\tools\Light.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="PRTLighting\tools\Geometry.cpp">
+      <Filter>tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PRTLighting\PRTLighting.h">
@@ -133,6 +136,9 @@
     </ClInclude>
     <ClInclude Include="PRTLighting\tools\Light.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PRTLighting\tools\Geometry.h">
+      <Filter>tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

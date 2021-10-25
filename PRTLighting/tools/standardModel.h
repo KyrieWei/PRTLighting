@@ -49,6 +49,60 @@ public:
 	}
 };
 
+class Cube
+{
+public:
+	std::vector<Mesh> meshes;
+
+	Cube() {}
+	void init(float radius, int numRings, int numSegments)
+	{
+		std::vector<Vertex> vertices;
+		std::vector<unsigned int> indices;
+
+		float fDeltaRingAngle = static_cast<float>(PI / numRings);
+		float fDeltaSegAngle = static_cast<float>(2 * PI / numSegments);
+
+		unsigned int wVerticeIndex = 0;
+
+		for (int ring = 0; ring <= numRings; ring++)
+		{
+			float r0 = static_cast<float>(radius) * sinf(ring * fDeltaRingAngle);
+			float y0 = static_cast<float>(radius) * cosf(ring * fDeltaRingAngle);
+
+			for (int seg = 0; seg <= numSegments; seg++)
+			{
+				float x0 = r0 * sinf(seg * fDeltaSegAngle);
+				float z0 = r0 * cosf(seg * fDeltaSegAngle);
+
+				glm::vec3 vNormal = glm::normalize(glm::vec3(x0, y0, z0));
+
+				Vertex v(x0, y0, z0, vNormal.x, vNormal.y, vNormal.z,
+					static_cast<float>(seg) / static_cast<float>(numSegments), static_cast<float>(ring) / static_cast<float>(numRings),
+					vNormal.x, vNormal.y, vNormal.z);
+
+				glm::vec3 tangent, bitangent;
+				generateTangentAndBitangent(vNormal, tangent, bitangent);
+				v.tangent = tangent;
+				v.bitangent = bitangent;
+
+				vertices.push_back(v);
+
+				if (ring != numRings)
+				{
+					indices.push_back(static_cast<unsigned int>(wVerticeIndex + numSegments + 1));
+					indices.push_back(static_cast<unsigned int>(wVerticeIndex));
+					indices.push_back(static_cast<unsigned int>(wVerticeIndex + numSegments));
+					indices.push_back(static_cast<unsigned int>(wVerticeIndex + numSegments + 1));
+					indices.push_back(wVerticeIndex + 1);
+					indices.push_back(wVerticeIndex);
+					wVerticeIndex++;
+				}
+			}
+		}
+	}
+};
+
 
 class InstanceCube
 {

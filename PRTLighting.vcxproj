@@ -148,6 +148,7 @@
     <ClCompile Include="PRTLighting\Scene.cpp" />
     <ClCompile Include="PRTLighting\SHLighting.cpp" />
     <ClCompile Include="PRTLighting\SimpleScene.cpp" />
+    <ClCompile Include="PRTLighting\tools\Geometry.cpp" />
     <ClCompile Include="PRTLighting\tools\glad.c" />
     <ClCompile Include="PRTLighting\tools\Light.cpp" />
     <ClCompile Include="PRTLighting\tools\Maths.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="PRTLighting\SHLighting.h" />
     <ClInclude Include="PRTLighting\SimpleScene.h" />
     <ClInclude Include="PRTLighting\tools\Camera.h" />
+    <ClInclude Include="PRTLighting\tools\Geometry.h" />
     <ClInclude Include="PRTLighting\tools\Light.h" />
     <ClInclude Include="PRTLighting\tools\MaterialSetting.h" />
     <ClInclude Include="PRTLighting\tools\Maths.h" />

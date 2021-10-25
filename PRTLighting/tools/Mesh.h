@@ -10,10 +10,23 @@ struct Vertex
 	glm::vec3 Position;
 	glm::vec3 Normal;
 	glm::vec2 TexCoords;
+	glm::vec3 Color;
 	glm::vec3 Tangent;
 	glm::vec3 Bitangent;
 
-	Vertex() : Tangent(glm::vec3(1.0f)), Bitangent(glm::vec3(1.0f)) {}
+	Vertex() = default;
+
+	Vertex(float px, float py, float pz, float nx, float ny, float nz,
+		float u, float v, float r, float g, float b,
+		float tx = 0, float ty = 0, float tz = 0, float bx = 0, float by = 0, float bz = 0)
+	{
+		Position = glm::vec3(px, py, pz);
+		Normal = glm::vec3(nx, ny, nz);
+		TexCoords = glm::vec2(u, v);
+		Color = glm::vec3(r, g, b);
+		Tangent = glm::vec3(tx, ty, tz);
+		Bitangent = glm::vec3(bx, by, bz);
+	}
 };
 
 struct Texture
@@ -35,13 +48,15 @@ public:
 	bool useMaterialSetting = false;
 	MaterialSetting materialSetting;
 
+	Mesh() = default;
+
 	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
 	{
 		this->vertices = vertices;
 		this->indices = indices;
 		this->textures = textures;
 
-		setupMesh();
+		setupMesh(vertices, indices);
 	}
 
 	~Mesh()
@@ -94,11 +109,23 @@ public:
 		glActiveTexture(GL_TEXTURE0);
 	}
 
-private:
+	void generateTangentAndBitangent(const glm::vec3& normal, glm::vec3& tangent, glm::vec3& bitangent)
+	{
+		glm::vec3 up = glm::vec3(0, 1, 0);
+		if (normal == up)
+			up = glm::vec3(1, 0, 0);
+		tangent = glm::cross(normal, up);
+		bitangent = glm::cross(tangent, normal);
+	}
+
+protected:
 	unsigned int VBO, EBO;
 
-	void setupMesh()
+	void setupMesh(const std::vector<Vertex> vertices_, const std::vector<unsigned int>& indices_)
 	{
+		vertices = vertices_;
+		indices = indices_;
+
 		glGenVertexArrays(1, &VAO);
 		glGenBuffers(1, &VBO);
 		glGenBuffers(1, &EBO);
@@ -119,6 +146,18 @@ private:
 
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+
+		//vertex color
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, Color)));
+
+		//vertex tangent
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, Tangent)));
+
+		//vertex bitangent
+		glEnableVertexAttribArray(5);
+		glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, Bitangent)));
 
 		glBindVertexArray(0);
 	}
