@@ -157,15 +157,15 @@ void main()
     FragColor.rgb = (kDiffuse * albedo / PI + brdf) * directionalLight.radiance * max(dot(normal, lightDir), 0.0f);
     //--------------------------------------------------------------------
 
-    vec3 ambient = vec3(0.03) * albedo;
-    color += ambient;
+    //vec3 ambient = vec3(0.03) * albedo;
+    //color += ambient;
 
-    color = color / (color + vec3(1.0));
-    color = pow(color, vec3(1.0/2.2));
+    //color = color / (color + vec3(1.0));
+    //color = pow(color, vec3(1.0/2.2));
     
-    FragColor = vec4(color, 1.0);
+    //FragColor = vec4(color, 1.0);
 
-    //vec3 ambient = directionalLight.radiance * 0.3;
+    vec3 ambient = directionalLight.radiance * 0.03;
 
     //float diff = max(dot(Normal, lightDir), 0.0);
     //vec3 diffuse = directionalLight.radiance * diff;
@@ -174,9 +174,7 @@ void main()
     //vec3 specular = directionalLight.radiance * spec;
 
     ////shadow
-    //float shadow = ShadowCalculate(FragPosLightSpace, Normal, lightDir);
+    float shadow = ShadowCalculate(FragPosLightSpace, Normal, lightDir);
 
-    //vec3 color = (ambient + (1.0 - shadow) * (diffuse + specular)) * albedo;
-
-    //FragColor = vec4(color, 1.0);
+    FragColor.rgb = ambient + FragColor.rgb * shadow;
 }

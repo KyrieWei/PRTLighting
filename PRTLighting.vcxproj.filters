@@ -187,5 +187,14 @@
     <None Include="PRTLighting\shaders\debug_depth_frag.fs">
       <Filter>shaders</Filter>
     </None>
+    <None Include="PRTLighting\shaders\voxelize_vert.vs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="PRTLighting\shaders\voxelize_geom.gs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="PRTLighting\shaders\voxelize_frag.fs">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

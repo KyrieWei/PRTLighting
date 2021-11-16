@@ -23,7 +23,7 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{edb9a9e5-4699-4af7-8ad8-5d70ac092472}</ProjectGuid>
     <RootNamespace>PRTLighting</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -197,6 +197,9 @@
     <None Include="PRTLighting\shaders\SHCoeff_comp.cs" />
     <None Include="PRTLighting\shaders\skybox_frag.fs" />
     <None Include="PRTLighting\shaders\skybox_vert.vs" />
+    <None Include="PRTLighting\shaders\voxelize_frag.fs" />
+    <None Include="PRTLighting\shaders\voxelize_geom.gs" />
+    <None Include="PRTLighting\shaders\voxelize_vert.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

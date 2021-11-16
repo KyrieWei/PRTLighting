@@ -18,7 +18,7 @@ void SimpleScene::init(int viewportwidth, int viewportheight)
     //directional light
     dirLightPos = glm::vec3(-50.0f, 1800.0f, -324.0f);
     glm::vec3 direction = glm::normalize(glm::vec3(1, 1, 1));
-    glm::vec3 radiance = glm::vec3(1.0f, 1.0f, 1.0f);
+    glm::vec3 radiance = glm::vec3(5.0f, 5.0f, 5.0f);
     directionalLight.init(direction, radiance);
 
     //sky box

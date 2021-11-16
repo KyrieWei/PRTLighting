@@ -48,7 +48,7 @@ public:
 			meshes[i].Draw(shader);
 	}
 };
-
+/*
 class Cube
 {
 public:
@@ -83,8 +83,8 @@ public:
 
 				glm::vec3 tangent, bitangent;
 				generateTangentAndBitangent(vNormal, tangent, bitangent);
-				v.tangent = tangent;
-				v.bitangent = bitangent;
+				v.Tangent = tangent;
+				v.Bitangent = bitangent;
 
 				vertices.push_back(v);
 
@@ -102,7 +102,7 @@ public:
 		}
 	}
 };
-
+*/
 
 class InstanceCube
 {
